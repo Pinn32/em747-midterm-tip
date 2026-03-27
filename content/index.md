@@ -20,7 +20,7 @@ tags:
       那么此时整个表格的行单位并非 post; 这时如果问 "score 大于 10 的 ==post== 有几条", 首先要筛选 `filter(type == "post")`
 - **`count()`时如果要预先操作的话, 最好加上新列名**
     - 比如 `count(month = month(Date))`
-- **注意区分 `select(col)` 和 `filter(condition)` [(详细介绍)](#filter() 中的逻辑运算符)**
+- **注意区分 `select(col)` 和 `filter(condition)` [(详细介绍)](#filter()-中的逻辑运算符)**
     - `filter(condition)` 用来选择行, `select(col)` 用来选择列
 - **学会用 `nrow()` 得到行数, `pull()` 得到值**
 - **学会 stringr 和 regex**
@@ -31,7 +31,7 @@ tags:
 - **最终手段 (实在来不及的话)**
     - 省略所有空格, 比如 `filter(score>=10)`, `mean=round(mean(score),2)`
     - 用 `T/F` 代替 `TRUE/FALSE`, 比如 `na.rm=T` 等价于 `na.rm = TRUE`
-    - 给 RStudio 添加 Snippet [(详细介绍)](#RStudio Snippet)
+    - 给 RStudio 添加 Snippet [(详细介绍)](#RStudio-Snippet)
 
 
 ---
