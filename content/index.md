@@ -453,11 +453,11 @@ data <- data |>
 
 ## RStudio Snippet
 
-在 RStudio > Tools > Edit Code Snippets
-![[Pasted image 20260327174626.png|350]]
+在 RStudio > Tools > Edit Code Snippets  
+![[Pasted image 20260327174626.png|350]]  
 
-R > 在最下方添加新代码 > 保存
-![[Pasted image 20260327174737.png]]
+R > 在最下方添加新代码 > 保存  
+![[Pasted image 20260327174737.png]]  
 
 **比如 ggplot 画图的代码:**
 ```r
@@ -473,8 +473,8 @@ snippet ggplot
 		)
 ```
 
-保存成功后, 在 R 代码块里输入 `ggplot`, 选择 snippet
-![[Pasted image 20260327174946.png|500]]
+保存成功后, 在 R 代码块里输入 `ggplot`, 选择 snippet  
+![[Pasted image 20260327174946.png|500]]  
 
-按回车, 自动嵌入模板
-![[Pasted image 20260327174930.png|300]]
+按回车, 自动嵌入模板  
+![[Pasted image 20260327174930.png|300]]  
