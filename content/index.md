@@ -354,7 +354,7 @@ data |>
 
 ## select() 中的辅助函数
 
-==注意: select 选择的是列, 不是行; 考试很少用到 select, 用 filter 更多==
+==注意: select 选择的是列, 不是行; 考试很少用到 select, 用 filter 更多==  
 如果要求 "选择以 c 开头的 post" 不可以用 `select(starts_with("c"))`
 
 | 写法 | 效果 |
