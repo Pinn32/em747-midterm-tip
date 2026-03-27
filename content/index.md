@@ -463,9 +463,7 @@ R > 在最下方添加新代码 > 保存
 ```r
 snippet ggplot
     ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y})) +
-        
         geom_${4:bar}(${5:fill} = ${6:steelblue}) + 
-        
         labs(
             title = "${7:title}",
             x = "${8:xlab}",
