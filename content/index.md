@@ -462,15 +462,15 @@ R > 在最下方添加新代码 > 保存
 **比如 ggplot 画图的代码:**
 ```r
 snippet ggplot
-	ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y})) +
-		
-		geom_${4:bar}(${5:fill} = ${6:steelblue}) + 
-		
-		labs(
-			title = "${7:title}",
-			x = "${8:xlab}",
-			y = "${9:ylab}"
-		)
+    ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y})) +
+        
+        geom_${4:bar}(${5:fill} = ${6:steelblue}) + 
+        
+        labs(
+            title = "${7:title}",
+            x = "${8:xlab}",
+            y = "${9:ylab}"
+        )
 ```
 
 保存成功后, 在 R 代码块里输入 `ggplot`, 选择 snippet  
