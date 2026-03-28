@@ -25,7 +25,7 @@ tags:
 - **学会用 `nrow()` 得到行数, `pull()` 得到值**
 - **学会 stringr 和 regex**
     - 字符个数: `mutate(text_length = str_length(text))`
-    - 单词个数: `mutate(word_count = str_count(text, "\\S+")`
+    - 单词个数: `mutate(word_count = str_count(text, "\\S+"))`
 - **题目让你添加一列的时候要 assign, 因为添加的列后续还要用到**
     - `data <- data |> mutate(new_col = ...)`
 - **最终手段 (实在来不及的话)**
@@ -120,7 +120,7 @@ summarize(mean = round(mean(col, na.rm = TRUE), 2)) |> pull(mean)
 ```r
 # 例: 求 2019 年 post 的 score 的平均值, 保留 2 位小数
 data |>
-    filter(post == "post" & year(date) == 2019) |>
+    filter(type == "post" & year(date) == 2019) |>
     summarize(mean = round(mean(score, na.rm = TRUE), 2)) |>
     pull(mean)
 ```
@@ -150,7 +150,7 @@ data <- data |>
 
 # 添加一列 单词数
 data <- data |>
-    mutate(word_count = str_count("\\S+"))
+    mutate(word_count = str_count(text, "\\S+"))
 ```
 
 ## 3. 某列最大值所在行的另一列值
@@ -191,14 +191,14 @@ bar_data <- data |>
     count(month = month(date)) # 无需 sort = TRUE
 
 # 第二步: 画图
-ggplot(bar_data, aes(x = factor(month), y = n) +
+ggplot(bar_data, aes(x = factor(month), y = n)) +
     # month 列是数字, 直接用的话 x 轴会变成连续的, 要用 factor(month)
     # 注: 由于"月份"是时间, 本身有顺序, 无需把 bar 按照大小排列;
     # 如果是 nominal 比如"地区", 可以用 x = reorder(area, -n) 来降序排列
     # 如果地区过多或地区名称过长, 可以用 coord_flip() 来转成横向 bar chart
 
-    # 注意要用 geom_col 而不是 _bar, 因为此处 y 是 month 列中的值, 
-    # 而不是 x 中不同 category 的行数
+    # 注意要用 geom_col 而不是 _bar, 因为此处 y 是 n 列中的值 (预先计算好的行数),
+    # 而不是让 ggplot 自己去数 x 中不同 category 的行数
     geom_col(fill = "steelblue") + # 随便指定一个喜欢的颜色
     
     labs(
@@ -211,9 +211,9 @@ ggplot(bar_data, aes(x = factor(month), y = n) +
 ## Histogram
 ```r
 # 画出 post score 的 histogram
-ggplot(data |> filter(type == "post"), aes(x = score)) |>
-    geom_histogram(fill = "steelblue", bins = 30) |> # 指定 bin 数
-    lab(
+ggplot(data |> filter(type == "post"), aes(x = score)) +
+    geom_histogram(fill = "steelblue", bins = 30) + # 指定 bin 数
+    labs(
         title = "Post Score Distribution",
         x = "Post Score",
         y = "Frequency"
@@ -251,7 +251,7 @@ IQR(data$col, na.rm = TRUE)
 
 ## 2. 先处理再求统计量
 ```r
-filter(条件) |> summarize(mean = mean(col)) |> pull(mean)
+filter(条件) |> summarize(mean = mean(col, na.rm = TRUE)) |> pull(mean)
 ```
 
 ## 3. 检测统计量 + 解读结果
@@ -282,7 +282,7 @@ coef(m)[[2]]  # slope
 | `filter(条件)` | 保留满足条件的==行== | `filter(type == "post" & score > 10)` |
 | `select(列)` | 根据列名选列 ==(考试很少用)== | `select(col1)`, `col1:col3`, `-col3` |
 | `count(列)` | 这列中所有 unique value 的行数 | <code>count(year = year(date), <span class="red">sort = TRUE</span>)</code> |
-| `nrow()` | 数当前有多少行 | 没有参数, 一般配合 `filter()` 使用:<br><code>filter(score > mean(score, na.rm=T)) \|> n()</code> |
+| `nrow()` | 数当前有多少行 | 没有参数, 一般配合 `filter()` 使用:<br><code>filter(score > mean(score, na.rm=T)) \|> nrow()</code> |
 | `slice_max(列, n=行数)` | 选出这列中值最大的行 | <code>slice_max(score, <span class="red">n</span> = 10)</code> |
 | `pull(列)` | 返回这列的值 | 一般先 filter / slice_max / head / summarize 到只剩一行, 然后 `pull(列名)`, 比如:<br><code>summarize(mean_age=mean(age,na.rm=T))\|> pull(mean_age)</code> |
 | `mutate(新列=表达式)` | 在原df基础上添加/修改列 | `mutate(perc = col1/col2*100)` |
@@ -294,11 +294,11 @@ coef(m)[[2]]  # slope
 
 ==考试很少用到 select, 用 filter 更多==
 
-> `group_by` + `summarize`：必须加 `.groups="drop"`；只保留汇总列，行数压缩
+> `group_by` + `summarize`：必须加 `.groups="drop"`；保留分组列 + 汇总列，行数压缩为每组一行
 > `group_by` + `mutate`：保留所有列且行数不变，之后须 `ungroup()`
 > `mean(condition)` → 满足条件的**比例**；`sum(condition)` → 满足条件的**个数**
 
-> 注意区分 `nrow()` 和 `n()` : 同样是数行数, 前者作用于 dataframe, 后者只能作用于 vector; `n()` 只能在 `summarize(number_of_observation = n())` 里用, pipe 时只能用 `nrow()`
+> 注意区分 `nrow()` 和 `n()` : 同样是数行数, `nrow()` 接受 dataframe 作为参数; `n()` 是 dplyr 上下文函数, 只能在 `summarize()` / `mutate()` 内部使用 (如 `summarize(number_of_observation = n())`), pipe 时只能用 `nrow()`
 
 ```r
 # 例题: 
@@ -309,7 +309,7 @@ data |>
     nrow() # 直接返回数字
 
 data |>
-    filter(type == "post" & wrod_count < 10)
+    filter(type == "post" & word_count < 10) |>
     summarize(count = n()) |> # summarize() 仍然返回 dataframe
     pull(count) # 需要 pull 才能得到数字
 ```
@@ -328,7 +328,7 @@ data |>
 
 ```r
 # 例题: 
-# 已知 data 中有一列 date, 该列的 datatype 是 Data (yyyy-mm-dd);
+# 已知 data 中有一列 date, 该列的 datatype 是 Date (yyyy-mm-dd);
 # 已知另一列 type, 该列有 "post" 和 "comment" 两种值;
 # 求年份是 2019 和 2023 的 post 一共有多少个
 
@@ -375,7 +375,7 @@ data <- data |>
 
 # 添加一列 单词数
 data <- data |>
-    mutate(word_count = str_count("\\S+"))
+    mutate(word_count = str_count(text, "\\S+"))
 ```
 
 | Pattern | Meaning | Example | Matches |
@@ -463,7 +463,7 @@ R > 在最下方添加新代码 > 保存
 ```r
 snippet ggplot
     ggplot(${1:data}, aes(x = ${2:x}, y = ${3:y})) +
-        geom_${4:bar}(${5:fill} = ${6:steelblue}) + 
+        geom_${4:bar}(${5:fill} = "${6:steelblue}") + 
         labs(
             title = "${7:title}",
             x = "${8:xlab}",
