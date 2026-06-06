@@ -1,0 +1,396 @@
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
+configuration:
+  pageTitle: "Quartz 4"
+  pageTitleSuffix: ""
+  enableSPA: true
+  enablePopovers: true
+  analytics:
+    provider: plausible
+  locale: en-US
+  baseUrl: em747-midterm-tip.vercel.app # TODO: update to your actual deployment URL (e.g. your-site.vercel.app)
+  ignorePatterns:
+    - private
+    - templates
+    - .obsidian
+  theme:
+    fontOrigin: googleFonts
+    cdnCaching: true
+    typography:
+      header: Schibsted Grotesk
+      body: Source Sans Pro
+      code: IBM Plex Mono
+    colors:
+      lightMode:
+        light: "#faf8f8"
+        lightgray: "#e5e5e5"
+        gray: "#b8b8b8"
+        darkgray: "#4e4e4e"
+        dark: "#2b2b2b"
+        secondary: "#284b63"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#fff23688"
+      darkMode:
+        light: "#161618"
+        lightgray: "#393639"
+        gray: "#646464"
+        darkgray: "#d4d4d4"
+        dark: "#ebebec"
+        secondary: "#7b97aa"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#b3aa0288"
+plugins:
+  # ── Transformers ──────────────────────────────────────────────────────────────
+  # Processes frontmatter / note properties (data only, no visual output)
+  - source: github:quartz-community/note-properties
+    enabled: true
+    options:
+      includeAll: false
+      includedProperties:
+        - description
+        - tags
+        - aliases
+      excludedProperties: []
+      hidePropertiesView: true # was Plugin.FrontMatter() in v4 — pure transformer
+      delimiters: "---"
+      language: yaml
+    order: 5
+  - source: github:quartz-community/created-modified-date
+    enabled: true
+    options:
+      priority:
+        - frontmatter
+        - git
+        - filesystem
+      defaultDateType: modified
+    order: 10
+  - source: github:quartz-community/syntax-highlighting
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+      clipboard: true
+      tokenClassification: true
+    order: 20
+  - source: github:quartz-community/obsidian-flavored-markdown
+    enabled: true
+    options:
+      comments: true
+      highlight: true
+      wikilinks: true
+      callouts: true
+      mermaid: true
+      parseTags: true
+      parseBlockReferences: true
+      enableInHtmlEmbed: false # explicitly false as in v4
+      enableYouTubeEmbed: true
+      enableTweetEmbed: true
+      enableVideoEmbed: true
+      enableCheckbox: true
+      enableObsidianUri: true
+    order: 30
+  - source: github:quartz-community/github-flavored-markdown
+    enabled: true
+    options:
+      enableSmartyPants: true
+      linkHeadings: true
+    order: 40
+  - source: github:quartz-community/table-of-contents
+    enabled: true
+    options:
+      maxDepth: 3
+      minEntries: 1
+      showByDefault: true
+      collapseByDefault: false
+      layout: modern
+    order: 50
+    layout:
+      position: right
+      priority: 50
+      display: all
+  - source: github:quartz-community/crawl-links
+    enabled: true
+    options:
+      markdownLinkResolution: shortest # v4 default
+      prettyLinks: true
+      openLinksInNewTab: false
+      lazyLoad: false
+      externalLinkIcon: true
+      disableBrokenWikilinks: false
+    order: 60
+  - source: github:quartz-community/description
+    enabled: true
+    options:
+      descriptionLength: 150
+      maxDescriptionLength: 300
+      replaceExternalLinks: true
+    order: 70
+  - source: github:quartz-community/latex
+    enabled: true
+    options:
+      renderEngine: katex
+    order: 80
+  - source: github:quartz-community/citations
+    enabled: false
+    options:
+      bibliographyFile: ./bibliography.bib
+      suppressBibliography: false
+      linkCitations: false
+      csl: apa
+    order: 85
+  - source: github:quartz-community/hard-line-breaks
+    enabled: false
+    options: {}
+    order: 90
+  - source: github:quartz-community/ox-hugo
+    enabled: false
+    options:
+      wikilinks: true
+      removePredefinedAnchor: true
+      removeHugoShortcode: true
+      replaceFigureWithMdImg: true
+      replaceOrgLatex: true
+    order: 91
+  - source: github:quartz-community/roam
+    enabled: false
+    options: {}
+    order: 92
+
+  # ── Filters ───────────────────────────────────────────────────────────────────
+  - source: github:quartz-community/remove-draft
+    enabled: true
+    options: {}
+    order: 50
+  - source: github:quartz-community/explicit-publish
+    enabled: false
+    options: {}
+    order: 50
+
+  # ── Emitters / Page Types ─────────────────────────────────────────────────────
+  - source: github:quartz-community/alias-redirects
+    enabled: true
+    options: {}
+    order: 50
+  - source: github:quartz-community/content-index
+    enabled: true
+    options:
+      enableSiteMap: true
+      enableRSS: true
+      rssLimit: 10
+      rssFullHtml: false
+      rssSlug: index
+      includeEmptyFiles: true
+    order: 50
+  - source: github:quartz-community/favicon
+    enabled: true
+    options: {}
+    order: 50
+  - source: github:quartz-community/og-image
+    enabled: true
+    options:
+      colorScheme: lightMode
+      width: 1200
+      height: 630
+      excludeRoot: false
+      defaultTitle: Untitled
+      defaultDescription: No description provided
+    order: 50
+  - source: github:quartz-community/cname
+    enabled: true
+    options: {}
+    order: 50
+  - source: github:quartz-community/canvas-page
+    enabled: false
+    options: {}
+    order: 50
+  - source: github:quartz-community/content-page
+    enabled: true
+    options: {}
+    order: 50
+  - source: github:quartz-community/folder-page
+    enabled: true
+    options:
+      showFolderCount: true
+      showSubfolders: true
+    order: 50
+  - source: github:quartz-community/tag-page
+    enabled: true
+    options:
+      numPages: 10
+    order: 50
+  - source: github:quartz-community/bases-page
+    enabled: false
+    options: {}
+    order: 50
+
+  # ── Components: beforeBody ────────────────────────────────────────────────────
+  # Matches v4 ConditionalRender(Breadcrumbs(), condition: slug !== "index")
+  - source: github:quartz-community/breadcrumbs
+    enabled: true
+    options:
+      spacerSymbol: "❯"
+      rootName: Home
+      resolveFrontmatterTitle: true
+      showCurrentPage: true
+    order: 50
+    layout:
+      position: beforeBody
+      priority: 5
+      condition: not-index
+  - source: github:quartz-community/article-title
+    enabled: true
+    options: {}
+    order: 50
+    layout:
+      position: beforeBody
+      priority: 10
+      display: all
+  - source: github:quartz-community/content-meta
+    enabled: true
+    options:
+      showReadingTime: true
+      showComma: true
+    order: 50
+    layout:
+      position: beforeBody
+      priority: 20
+      display: all
+  - source: github:quartz-community/tag-list
+    enabled: true
+    options: {}
+    order: 50
+    layout:
+      position: beforeBody
+      priority: 30
+      display: all
+
+  # ── Components: left — intentionally empty ───────────────────────────────────
+  # All left-column components from v4 default are disabled to maintain the
+  # minimal layout (no left sidebar) from the v4 custom quartz.layout.ts.
+  - source: github:quartz-community/page-title
+    enabled: false
+    options: {}
+    order: 50
+  - source: github:quartz-community/spacer
+    enabled: false
+    options: {}
+    order: 15
+  - source: github:quartz-community/explorer
+    enabled: false
+    options:
+      folderDefaultState: collapsed
+      folderClickBehavior: link
+      useSavedState: true
+    order: 50
+  - source: github:quartz-community/reader-mode
+    enabled: false
+    options: {}
+    order: 50
+
+  # ── Components: right — toolbar (Search + Darkmode) then ToC ─────────────────
+  # Matches v4 custom layout: Flex({ Search(grow), Darkmode }) then TableOfContents
+  - source: github:quartz-community/search
+    enabled: true
+    options:
+      enablePreview: true
+      fieldPriority:
+        - title
+        - content
+        - tags
+    order: 50
+    layout:
+      position: right
+      priority: 20
+      group: toolbar
+      groupOptions:
+        grow: true
+  - source: github:quartz-community/darkmode
+    enabled: true
+    options: {}
+    order: 50
+    layout:
+      position: right
+      priority: 30
+      group: toolbar
+
+  # ── Components: right — disabled ─────────────────────────────────────────────
+  - source: github:quartz-community/graph
+    enabled: false
+    options: {}
+    order: 50
+  - source: github:quartz-community/backlinks
+    enabled: false
+    options:
+      hideWhenEmpty: true
+    order: 50
+
+  # ── Other components ──────────────────────────────────────────────────────────
+  - source: github:quartz-community/footer
+    enabled: true
+    options:
+      links:
+        GitHub: https://github.com/jackyzha0/quartz
+        Discord Community: https://discord.gg/cRFFHYye7t
+    order: 50
+    layout:
+      position: footer
+      priority: 50
+      display: all
+  - source: github:quartz-community/comments
+    enabled: false
+    options:
+      provider: giscus
+      options: {}
+    order: 50
+    layout:
+      position: afterBody
+      priority: 10
+      display: all
+  - source: github:quartz-community/recent-notes
+    enabled: false
+    options: {}
+    order: 50
+  - source: github:quartz-community/stacked-pages
+    enabled: false
+    options: {}
+    order: 50
+  - source: github:quartz-community/encrypted-pages
+    enabled: false
+    options:
+      iterations: 600000
+      passwordField: password
+      unlistWhenEncrypted: false
+      outputPath: static/encryptedContentIndex.json
+    order: 900
+
+  # ── Third-party / quartz-themes (from lockfile) ───────────────────────────────
+  - source:
+      name: quartz-themes
+      repo: github:saberzero1/quartz-themes
+      subdir: plugin
+    enabled: true
+    options: {}
+    order: 50
+
+layout:
+  groups:
+    toolbar:
+      priority: 35 # renders toolbar container at this priority within its column (right)
+      direction: row
+      gap: 0.5rem
+  byPageType:
+    "404":
+      positions:
+        beforeBody: []
+        left: []
+        right: []
+    content: {}
+    folder:
+      positions:
+        right: [] # no right sidebar on folder listing pages
+    tag:
+      positions:
+        right: [] # no right sidebar on tag listing pages
