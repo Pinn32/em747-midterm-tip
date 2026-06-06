@@ -1,4 +1,4 @@
 {
   "cleanUrls": true,
-  "buildCommand": "npx quartz plugin restore && npx quartz build"
+  "buildCommand": "npx quartz plugin install && npx quartz build"
 }
